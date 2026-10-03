@@ -3,14 +3,13 @@ package co.edu.demoacademico.controller;
 import co.edu.demoacademico.model.Estudiante;
 import co.edu.demoacademico.service.EstudianteService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
-// Capa de presentación. Recibe peticiones HTTP y delega al servicio.
 @RestController
 @RequestMapping("/api/estudiantes")
 public class EstudianteController {
@@ -21,32 +20,23 @@ public class EstudianteController {
         this.service = service;
     }
 
-    // POST /api/estudiantes — crea un estudiante, retorna 409 si el email ya existe
     @PostMapping
-    public ResponseEntity<?> crear(@Valid @RequestBody Estudiante estudiante) {
-        try {
-            Estudiante creado = service.crear(estudiante);
-            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
-        } catch (EstudianteService.EmailDuplicadoException ex) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", ex.getMessage()));
-        }
+    public Estudiante crear(@Valid @RequestBody Estudiante estudiante) {
+        return service.crear(estudiante);
     }
 
-    // GET /api/estudiantes — lista todos los estudiantes
     @GetMapping
     public List<Estudiante> listar() {
         return service.listar();
     }
 
-    // GET /api/estudiantes/buscar?email= — busca por email, retorna 404 si no existe
+    @GetMapping("/pagina")
+    public Page<Estudiante> listarPaginado(@ParameterObject Pageable pageable) {
+        return service.listar(pageable);
+    }
+
     @GetMapping("/buscar")
-    public ResponseEntity<?> buscarPorEmail(@RequestParam String email) {
-        return service.buscarPorEmail(email)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body(Map.of("error", "No se encontró ningún estudiante con el email: " + email)));
+    public Estudiante buscarPorEmail(@RequestParam String email) {
+        return service.buscarPorEmail(email);
     }
 }

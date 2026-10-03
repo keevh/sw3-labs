@@ -1,25 +1,25 @@
 package co.edu.demoacademico.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-// Entidad JPA mapeada a la tabla "estudiante" en H2.
 @Entity
-@Table(name = "estudiante")
 public class Estudiante {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "El nombre es obligatorio")
-    @Column(nullable = false)
     private String nombre;
 
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "Formato de email inválido")
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     public Estudiante() {}

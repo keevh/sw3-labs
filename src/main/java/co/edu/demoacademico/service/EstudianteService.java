@@ -2,12 +2,12 @@ package co.edu.demoacademico.service;
 
 import co.edu.demoacademico.model.Estudiante;
 import co.edu.demoacademico.repository.EstudianteRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-// Capa de lógica de negocio. No conoce HTTP ni detalles de persistencia.
 @Service
 public class EstudianteService {
 
@@ -18,9 +18,8 @@ public class EstudianteService {
     }
 
     public Estudiante crear(Estudiante estudiante) {
-        // Regla de negocio: el email debe ser único
-        if (repository.findByEmail(estudiante.getEmail()).isPresent()) {
-            throw new EmailDuplicadoException("El email '" + estudiante.getEmail() + "' ya está registrado.");
+        if (repository.existsByEmail(estudiante.getEmail())) {
+            throw new EmailDuplicadoException(estudiante.getEmail());
         }
         return repository.save(estudiante);
     }
@@ -29,14 +28,12 @@ public class EstudianteService {
         return repository.findAll();
     }
 
-    public Optional<Estudiante> buscarPorEmail(String email) {
-        return repository.findByEmail(email);
+    public Page<Estudiante> listar(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
-    // Excepción de negocio para email duplicado, permite retornar HTTP 409 al cliente
-    public static class EmailDuplicadoException extends RuntimeException {
-        public EmailDuplicadoException(String message) {
-            super(message);
-        }
+    public Estudiante buscarPorEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new EstudianteNoEncontradoException(email));
     }
 }
