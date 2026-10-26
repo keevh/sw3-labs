@@ -10,6 +10,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+    open-in-view: true
     properties:
       hibernate:
         format_sql: true
@@ -33,4 +34,7 @@ springdoc:
 app:
   seed:
     enabled: true
-    cantidad: 500
+    cantidad-estudiantes: 50
+    cantidad-programas: 3
+    cantidad-asignaturas: 10
+    cantidad-grupos: 20
