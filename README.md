@@ -2,6 +2,27 @@
 
 Proyecto de Ingeniería de Software III. API REST del sistema académico con Spring Boot y base de datos H2 en memoria. Empezó como el módulo de estudiantes por capas (Lab 01) y ahora incluye programas, asignaturas, grupos y matrículas, organizados por módulos.
 
+## Qué agrega cada laboratorio
+
+### Lab 03
+- Programas, asignaturas, grupos y matrículas, con sus DTOs, handlers y servicios.
+- Reglas de matrícula: sin duplicados y sin pasar el cupo del grupo.
+- Código separado por módulos y `common` para lo compartido.
+- Ports `EstudianteQueryPort` y `GrupoQueryPort` para que matrículas no use los repositorios de otros módulos.
+- Estudiantes con DTOs y CRUD completo. Todas las respuestas usan `ApiResponse`.
+- Seeder de programas, asignaturas y grupos.
+
+### Lab 02
+- Listado paginado de estudiantes en `/api/estudiantes/pagina`.
+- Swagger UI con Springdoc.
+- Excepciones propias y `GlobalExceptionHandler`.
+- Seeder de estudiantes con JavaFaker.
+
+### Lab 01
+- Módulo de estudiantes por capas: controller, service, repository y model.
+- Crear, listar y buscar estudiantes por email.
+- H2 en memoria.
+
 ## Tecnologías
 
 - Java 21
@@ -53,8 +74,16 @@ Las respuestas vienen con el formato `ApiResponse`: `success`, `message`, `data`
 
 ## Cómo ejecutar
 
+Linux y macOS:
+
 ```bash
-sh ./mvnw spring-boot:run
+./mvnw spring-boot:run
+```
+
+Windows:
+
+```bat
+mvnw.cmd spring-boot:run
 ```
 
 La aplicación corre en `http://localhost:8080`.
